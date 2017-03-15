@@ -20,5 +20,20 @@ namespace Kata.Tests
             navigation.X.Should().Be(0);
             navigation.Y.Should().Be(1);
         }
+
+        [Fact]
+        public void MoveB()
+        {
+            //Arrange
+            var navigation = new NavigationDrive(NavHeading.N, 0, 0);
+
+            //Act
+            navigation.Move(new MoveB());
+
+            //Assert
+            navigation.CurrentHeading.Should().Be(NavHeading.N);
+            navigation.X.Should().Be(0);
+            navigation.Y.Should().Be(-1);
+        }
     }
 }
