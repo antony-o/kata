@@ -4,7 +4,25 @@
     {
         public INavigationDrive Execute(INavigationDrive navigationDrive)
         {
-            navigationDrive.Y++;
+            switch (navigationDrive.CurrentHeading)
+            {
+                case NavHeading.N:
+                    navigationDrive.Y++;
+                    break;
+
+                case NavHeading.E:
+                    navigationDrive.X++;
+                    break;
+
+                case NavHeading.S:
+                    navigationDrive.Y--;
+                    break;
+
+                case NavHeading.W:
+                    navigationDrive.X--;
+                    break;
+
+            }
 
             return navigationDrive;
         }
