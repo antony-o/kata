@@ -1,30 +1,32 @@
 ﻿namespace Kata.Navigation
 {
-    public class MoveB: INavCommand
+    public class MoveB: BaseMoveCommand, INavCommand
     {
-        public INavigationDrive Execute(INavigationDrive navigationDrive)
+        public INavigationDrive Execute(INavigationDrive navDrive)
         {
-            switch (navigationDrive.CurrentHeading)
+            switch (navDrive.CurrentHeading)
             {
                 case NavHeading.N:
-                    navigationDrive.Y--;
+                    navDrive.Y--;
                     break;
 
                 case NavHeading.E:
-                    navigationDrive.X--;
+                    navDrive.X--;
                     break;
 
                 case NavHeading.S:
-                    navigationDrive.Y++;
+                    navDrive.Y++;
                     break;
 
                 case NavHeading.W:
-                    navigationDrive.X++;
+                    navDrive.X++;
                     break;
 
             }
 
-            return navigationDrive;
+            WrapCoords(navDrive);
+
+            return navDrive;
         }
     }
 }

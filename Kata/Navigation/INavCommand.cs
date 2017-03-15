@@ -4,6 +4,6 @@ namespace Kata.Navigation
 {
     public interface INavCommand
     {
-        INavigationDrive Execute(INavigationDrive navigationDrive);
+        INavigationDrive Execute(INavigationDrive navDrive);
     }
 }

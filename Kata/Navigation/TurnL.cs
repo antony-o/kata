@@ -4,18 +4,18 @@ namespace Kata.Navigation
 {
     public class TurnL: INavCommand
     {
-        public INavigationDrive Execute(INavigationDrive navigationDrive)
+        public INavigationDrive Execute(INavigationDrive navDrive)
         {
-            int newHeading = ((int)navigationDrive.CurrentHeading) - 1;
+            int newHeading = ((int)navDrive.CurrentHeading) - 1;
 
             if (newHeading < 1)
             {
                 newHeading = 4;
             }
 
-            navigationDrive.CurrentHeading = (NavHeading)newHeading;
+            navDrive.CurrentHeading = (NavHeading)newHeading;
 
-            return navigationDrive;
+            return navDrive;
         }
     }
 }
