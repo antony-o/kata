@@ -2,6 +2,8 @@
 {
     public class MoveB: BaseMoveCommand, INavCommand
     {
+        public char CommandLetter => 'B';
+
         public INavigationDrive Execute(INavigationDrive navDrive)
         {
             switch (navDrive.CurrentHeading)

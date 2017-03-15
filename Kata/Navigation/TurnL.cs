@@ -4,6 +4,8 @@ namespace Kata.Navigation
 {
     public class TurnL: INavCommand
     {
+        public char CommandLetter => 'L';
+
         public INavigationDrive Execute(INavigationDrive navDrive)
         {
             int newHeading = ((int)navDrive.CurrentHeading) - 1;

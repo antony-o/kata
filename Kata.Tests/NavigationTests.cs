@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FluentAssertions;
 using Kata.Navigation;
 using Kata.Planet;
@@ -7,14 +8,6 @@ namespace Kata.Tests
 {
     public class NavigationTests
     {
-        private IPlanet targetPlanet;
-
-
-        public NavigationTests()
-        {
-            targetPlanet = new Pluto();
-        }
-
         [Theory]
         [InlineData(NavHeading.N, 0, 1)]
         [InlineData(NavHeading.E, 1, 0)]
@@ -26,7 +19,7 @@ namespace Kata.Tests
             var navDrive = _landOnPlanet(new Pluto(), initialHeading, 0, 0);
 
             //Act
-            navDrive.Move(new MoveF());
+            navDrive.Execute("F");
 
             //Assert
             navDrive.CurrentHeading.Should().Be(initialHeading);
@@ -45,7 +38,7 @@ namespace Kata.Tests
             var navDrive = _landOnPlanet(new Pluto(), initialHeading, 100, 100);
 
             //Act
-            navDrive.Move(new MoveF());
+            navDrive.Execute("F");
 
             //Assert
             navDrive.CurrentHeading.Should().Be(initialHeading);
@@ -53,9 +46,10 @@ namespace Kata.Tests
             navDrive.Y.Should().Be(expectedY);
         }
 
+
         [Theory]
-        [InlineData(NavHeading.N, 0, 99)]
-        [InlineData(NavHeading.E, 99, 0)]
+        [InlineData(NavHeading.N, 0, 100)]
+        [InlineData(NavHeading.E, 100, 0)]
         [InlineData(NavHeading.S, 0, 1)]
         [InlineData(NavHeading.W, 1, 0)]
         public void MoveB(NavHeading initialHeading, int expectedX, int expectedY)
@@ -64,7 +58,7 @@ namespace Kata.Tests
             var navDrive = _landOnPlanet(new Pluto(), initialHeading, 0, 0);
 
             //Act
-            navDrive.Move(new MoveB());
+            navDrive.Execute("B");
 
             //Assert
             navDrive.CurrentHeading.Should().Be(initialHeading);
@@ -83,7 +77,7 @@ namespace Kata.Tests
             var navDrive = _landOnPlanet(new Pluto(), initialHeading, 100, 100);
 
             //Act
-            navDrive.Move(new MoveB());
+            navDrive.Execute("B");
 
             //Assert
             navDrive.CurrentHeading.Should().Be(initialHeading);
@@ -104,7 +98,7 @@ namespace Kata.Tests
             var navDrive = _landOnPlanet(new Pluto(), initialHeading, 5, 5);
 
             //Act
-            navDrive.Move(new TurnR());
+            navDrive.Execute("R");
 
             //Assert
             navDrive.CurrentHeading.Should().Be(expectedHeading);
@@ -123,7 +117,7 @@ namespace Kata.Tests
             var navDrive = _landOnPlanet(new Pluto(), initialHeading, 5, 5);
 
             //Act
-            navDrive.Move(new TurnL());
+            navDrive.Execute("L");
 
             //Assert
             navDrive.CurrentHeading.Should().Be(expectedHeading);
@@ -131,18 +125,42 @@ namespace Kata.Tests
             navDrive.Y.Should().Be(5);
         }
 
+        [Theory]
+        [InlineData(NavHeading.N, NavHeading.E, 2, 2)]
+        [InlineData(NavHeading.S, NavHeading.W, 99, 99)]
+        public void MoveFFRFF(NavHeading initialHeading, NavHeading expectedHeading, int expectedX, int expectedY)
+        {
+            //Arrange
+            var navDrive = _landOnPlanet(new Pluto(), initialHeading, 0, 0);
+
+            //Act
+            navDrive.Execute("FFRFF");
+
+            //Assert
+            navDrive.CurrentHeading.Should().Be(expectedHeading);
+            navDrive.X.Should().Be(expectedX);
+            navDrive.Y.Should().Be(expectedY);
+        }
+
+
         #region TestHelper
 
 
         private NavigationDrive _landOnPlanet(IPlanet planet, NavHeading initialHeading, int initialX, int initialY)
         {
-            var navDrive = new NavigationDrive(planet, initialHeading, initialX, initialY);
+            var navCommandList = new List<INavCommand>()
+            {
+                new MoveF(),
+                new MoveB(),
+                new TurnL(),
+                new TurnR()
+            };
+
+            var navDrive = new NavigationDrive(planet, navCommandList, initialHeading, initialX, initialY);
 
             return navDrive;
         }
 
-
         #endregion
-
     }
 }
