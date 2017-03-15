@@ -35,5 +35,24 @@ namespace Kata.Tests
             navigation.X.Should().Be(0);
             navigation.Y.Should().Be(-1);
         }
+
+        [Theory]
+        [InlineData(NavHeading.N, NavHeading.E)]
+        [InlineData(NavHeading.E, NavHeading.S)]
+        [InlineData(NavHeading.S, NavHeading.W)]
+        [InlineData(NavHeading.W, NavHeading.N)]
+        public void TurnR(NavHeading initialHeading, NavHeading expectedHeading)
+        {
+            //Arrange
+            var navigation = new NavigationDrive(initialHeading, 5, 5);
+
+            //Act
+            navigation.Move(new TurnR());
+
+            //Assert
+            navigation.CurrentHeading.Should().Be(expectedHeading);
+            navigation.X.Should().Be(5);
+            navigation.Y.Should().Be(5);
+        }
     }
 }

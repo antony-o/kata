@@ -4,9 +4,9 @@ namespace Kata.Navigation
 {
     public enum NavHeading
     {
-        N,
-        S,
-        E,
-        W
+        N = 1,
+        E = 2,
+        S = 3,
+        W = 4
     }
 }
