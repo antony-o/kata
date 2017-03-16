@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
 using FakeItEasy;
 using FluentAssertions;
 using Kata.Navigation;
+using Kata.NavSystem;
 using Kata.Planet;
 using Xunit;
 
@@ -12,8 +11,8 @@ namespace Kata.Tests
     public class NavigationTests
     {
 
-        private IPlanet _fakePluto;
-        private IErrorLog _errorLog;
+        private readonly IPlanet _fakePluto;
+        private readonly IErrorLog _errorLog;
 
         public NavigationTests()
         {
@@ -26,12 +25,12 @@ namespace Kata.Tests
             A.CallTo(() => _fakePluto.MaxY).Returns(100);
 
             //Add impassable large rock to planet
-            var fakeLargeRock = A.Fake<ITerrainObstacle>();
+            var fakeLargeRock = A.Fake<ITerrainFeature>();
             A.CallTo(() => fakeLargeRock.Description).Returns("Large Rock");
             A.CallTo(() => fakeLargeRock.X).Returns(10);
             A.CallTo(() => fakeLargeRock.Y).Returns(10);
 
-            A.CallTo(() => _fakePluto.TerrainObstacles).ReturnsLazily(() => new[]
+            A.CallTo(() => _fakePluto.TerrainFeatures).ReturnsLazily(() => new[]
             {
                 fakeLargeRock
             });
@@ -97,9 +96,9 @@ namespace Kata.Tests
 
         [Theory]
         [InlineData(NavHeading.N, 100, 99)]
-        //[InlineData(NavHeading.E, 99, 100)]
-        //[InlineData(NavHeading.S, 100, 0)]
-        //[InlineData(NavHeading.W, 0, 100)]
+        [InlineData(NavHeading.E, 99, 100)]
+        [InlineData(NavHeading.S, 100, 0)]
+        [InlineData(NavHeading.W, 0, 100)]
         public void MoveB_100x100(NavHeading initialHeading, int expectedX, int expectedY)
         {
             //Arrange
@@ -201,14 +200,24 @@ namespace Kata.Tests
 
         private NavigationDrive _landOnPlanet(IPlanet planet, NavHeading initialHeading, int initialX, int initialY)
         {
-            //Add nav drive command list
+            //Create nav drive sequence
+            var navDriveSequence = new List<INavSystemCommand>()
+            {
+                new CoordsCheck(),
+                new TerrainCheck(),
+                new MoveToTargetCoords()
+           };
+
+
+            //Create nav command list
             var navCommandList = new List<INavCommand>()
             {
-                new MoveF(),
-                new MoveB(),
+                new MoveF(navDriveSequence),
+                new MoveB(navDriveSequence),
                 new TurnL(),
                 new TurnR()
             };
+
 
             var navDrive = new NavigationDrive(planet, navCommandList, _errorLog, initialHeading, initialX, initialY);
 

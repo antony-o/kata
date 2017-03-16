@@ -1,9 +1,15 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Collections.Generic;
 
 namespace Kata.Navigation
 {
-    public class MoveF: BaseMoveCommand, INavCommand
+    public class MoveF : INavCommand
     {
+        private readonly IEnumerable<INavSystemCommand> _driveCmdSequence;
+
+        public MoveF(IEnumerable<INavSystemCommand> driveCmdSequence)
+        {
+            _driveCmdSequence = driveCmdSequence;
+        }
         public char CommandLetter => 'F';
 
         public INavigationDrive Execute(INavigationDrive navDrive)
@@ -30,10 +36,11 @@ namespace Kata.Navigation
                     break;
             }
 
-            //Drive Command Sequence
-            WrapTargetCoords(navDrive);
-            CheckForTerrainObstacles(navDrive);
-            MoveToTargetCoords(navDrive);
+            //Execute Drive Command Sequence
+            foreach (var systemCmd in _driveCmdSequence)
+            {
+                systemCmd.Execute(navDrive);
+            }
 
             return navDrive;
         }

@@ -1,6 +1,6 @@
 namespace Kata.Planet
 {
-    public interface ITerrainObstacle
+    public interface ITerrainFeature
     {
         string Description { get; set; }
         int X { get; set; }

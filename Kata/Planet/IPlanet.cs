@@ -7,6 +7,6 @@ namespace Kata.Planet
     {
         int MaxX { get; set; }
         int MaxY { get; set; }
-        IEnumerable<ITerrainObstacle> TerrainObstacles { get; set; }
+        IEnumerable<ITerrainFeature> TerrainFeatures { get; set; }
     }
 }

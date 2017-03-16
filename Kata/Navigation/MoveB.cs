@@ -1,7 +1,15 @@
-﻿namespace Kata.Navigation
+﻿using System.Collections.Generic;
+
+namespace Kata.Navigation
 {
-    public class MoveB: BaseMoveCommand, INavCommand
+    public class MoveB: INavCommand
     {
+        private readonly IEnumerable<INavSystemCommand> _driveCmdSequence;
+
+        public MoveB(IEnumerable<INavSystemCommand> driveCmdSequence)
+        {
+            _driveCmdSequence = driveCmdSequence;
+        }
         public char CommandLetter => 'B';
 
         public INavigationDrive Execute(INavigationDrive navDrive)
@@ -26,10 +34,11 @@
 
             }
 
-            //Drive Command Sequence
-            WrapTargetCoords(navDrive);
-            CheckForTerrainObstacles(navDrive);
-            MoveToTargetCoords(navDrive);
+            //Execute Drive Command Sequence
+            foreach (var systemCmd in _driveCmdSequence)
+            {
+                systemCmd.Execute(navDrive);
+            }
 
             return navDrive;
         }
