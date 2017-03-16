@@ -10,6 +10,10 @@ namespace Kata.Navigation
         NavHeading CurrentHeading { get; set; }
         int X { get; set; }
         int Y { get; set; }
+        int TargetX { get; set; }
+        int TargetY { get; set; }
+        IErrorLog Logger { get; set; }
+        bool NavError { get; set; }
 
         void Execute(string commands);
     }
@@ -21,18 +25,26 @@ namespace Kata.Navigation
         public NavHeading CurrentHeading { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int TargetX { get; set; }
+        public int TargetY { get; set; }
+        public IErrorLog Logger { get; set; }
+        public bool NavError { get; set; }
 
-        public NavigationDrive(IPlanet planet, IList<INavCommand> navCommandList, NavHeading initialHeading, int initialX, int initialY)
+        public NavigationDrive(IPlanet planet, IList<INavCommand> navCommandList, IErrorLog errorLogger, NavHeading initialHeading, int initialX, int initialY)
         {
             CurrentPlanet = planet;
             NavCommandList = navCommandList;
+            Logger = errorLogger;
             CurrentHeading = initialHeading;
             X = initialX;
             Y = initialY;
+            TargetX = X;
+            TargetY = Y;
         }
 
         public void Execute(string navCommands)
         {
+
             char[] arrayCmdLetters = navCommands.ToUpper().ToArray();
 
             foreach (var cmdLetter in arrayCmdLetters)
@@ -42,10 +54,10 @@ namespace Kata.Navigation
                 if (navCommand != null)
                 {
                     navCommand.Execute(this);
-                }
-                else
-                {
-                    //TODO: log error
+                    if (NavError)
+                    {
+                        break;
+                    }
                 }
             }
         }

@@ -9,24 +9,27 @@
             switch (navDrive.CurrentHeading)
             {
                 case NavHeading.N:
-                    navDrive.Y--;
+                    navDrive.TargetY = navDrive.Y - 1;
                     break;
 
                 case NavHeading.E:
-                    navDrive.X--;
+                    navDrive.TargetX = navDrive.X - 1;
                     break;
 
                 case NavHeading.S:
-                    navDrive.Y++;
+                    navDrive.TargetY = navDrive.Y + 1;
                     break;
 
                 case NavHeading.W:
-                    navDrive.X++;
+                    navDrive.TargetX = navDrive.X + 1;
                     break;
 
             }
 
-            WrapCoords(navDrive);
+            //Drive Command Sequence
+            WrapTargetCoords(navDrive);
+            CheckForTerrainObstacles(navDrive);
+            MoveToTargetCoords(navDrive);
 
             return navDrive;
         }

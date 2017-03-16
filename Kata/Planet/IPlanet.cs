@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Kata.Planet
 {
@@ -6,5 +7,6 @@ namespace Kata.Planet
     {
         int MaxX { get; set; }
         int MaxY { get; set; }
+        IEnumerable<ITerrainObstacle> TerrainObstacles { get; set; }
     }
 }
